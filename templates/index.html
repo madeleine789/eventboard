@@ -1,0 +1,24 @@
+{% extends 'layout.html' %}
+{% block main %}
+      
+<div class="row">
+  <div class="col-md-8 col-md-push-1 list-group">
+    <legend class="page-header">Events</legend>
+    {% for event in events %}
+
+
+      {% if current_user.id == event.user.id%}
+        <a href="/events/{{event.id}}" class="list-group-item">{{event.title}} <span class="label label-primary">edit</span></a>
+      {% else %}
+        <a href="/events/{{event.id}}" class="list-group-item">{{event.title}}</a>
+      {% endif %}
+
+    {% endfor %}
+
+  </div>
+
+  
+</div>
+
+
+{% endblock %}
