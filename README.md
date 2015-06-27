@@ -10,7 +10,9 @@
 * search tweets
 
 ### TO DO
+* user roles/permissions with flask-principal
 * tests
+* mongolab db setup
 * deployment on pythonanywhere.com
 
 ### Configure environment
