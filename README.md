@@ -7,23 +7,15 @@
 * create events 
 * edit events
 * comment events
-* search tweets
+* search/post tweets
 
 ### TO DO
-* user roles/permissions with flask-principal
 * tests
-* mongolab db setup
 * deployment on pythonanywhere.com
 
 ### Configure environment
 
-* Set up MongoDB
 * Download code 
-* Create Git repo
-
-		git init
-		git add .
-		git commit -am "init commit"
 
 * Create virtual environment and install package requirements - in project directory run:
 
@@ -32,10 +24,6 @@
 	or 
 
 		pyconfig\config.bat
-
-### Run MongoDB
-        
-        mongod
 		
 ### Run Eventboard app
 	
