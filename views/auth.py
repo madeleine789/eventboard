@@ -1,6 +1,6 @@
 __author__ = 'mms'
 
-from flask import current_app, Blueprint, render_template, abort, request, flash, redirect, url_for
+from flask import current_app, Blueprint, render_template, abort, request, flash, redirect, url_for, session, g
 from app import login_manager, flask_bcrypt
 from flask.ext.login import (current_user, login_required, login_user, logout_user, confirm_login, fresh_login_required)
 
@@ -21,6 +21,9 @@ def login():
 
 			if login_user(user, remember=remember):
 				# flash("Logged in!")
+				print id
+				#identity_changed.send(current_app._get_current_object(),identity=Identity(user.id))
+
 				return redirect('/events/create')
 			else:
 				pass
@@ -82,7 +85,10 @@ def reauth():
 @login_required
 def logout():
 	logout_user()
-	flash("Logged out.")
+	for key in ('identity.name', 'identity.auth_type'):
+		session.pop(key, None)
+	#identity_changed.send(current_app._get_current_object(), identity=AnonymousIdentity())
+	# flash("Logged out.")
 	return redirect('/login')
 
 

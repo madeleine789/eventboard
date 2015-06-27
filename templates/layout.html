@@ -34,6 +34,7 @@
       <a class="active navbar-brand" href="#">EventBoard</a>
       <ul class="nav navbar-nav">
         <li class="active"> <a href="/">Home</a> </li>
+        <li class="active"> <a href="/users">Users</a></li>
         {% if current_user.is_authenticated() %}
             <li class=" active"> <a href="/events/create">Create new event</a> </li>
         {% else %}

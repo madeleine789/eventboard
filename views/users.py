@@ -8,6 +8,13 @@ from models import models
 users_app = Blueprint('users_app', __name__, template_folder='templates')
 
 
+@users_app.route('/users')
+def index():
+	data = {
+		'users': models.User.objects
+	}
+	return render_template('user/list.html', **data)
+
 @users_app.route("/profile")
 @login_required
 def show_my_profile():

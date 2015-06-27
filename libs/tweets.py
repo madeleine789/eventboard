@@ -2,7 +2,7 @@ __author__ = 'mms'
 
 from TwitterSearch import *
 from app import app
-
+import tweepy
 
 def search(query='cheeky nandos ledge banter', max=5):
 
@@ -33,3 +33,10 @@ def search(query='cheeky nandos ledge banter', max=5):
 
 	except TwitterSearchException as e:  # take care of all those ugly errors if there are some
 		print(e)
+
+
+def post(status='New status'):
+	auth = tweepy.OAuthHandler(app.config['TWITTER_CONSUMER_KEY'], app.config['TWITTER_CONSUMER_SECRET'])
+	auth.set_access_token(app.config['TWITTER_ACCESS_TOKEN'], app.config['TWITTER_TOKEN_SECRET'])
+	twitter = tweepy.API(auth)
+	twitter.update_status(status=status)
