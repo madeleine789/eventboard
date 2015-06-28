@@ -5,7 +5,7 @@ from flask.ext.mongoengine.wtf import model_form
 from wtforms.fields.html5 import DateTimeField
 from wtforms.fields import TextField, PasswordField, StringField
 from flask.ext.mongoengine.wtf.orm import validators
-from libs.datetime import DateTimePickerWidget
+#from libs.datetime import DateTimePickerWidget
 
 
 user_form = model_form(models.User, exclude=['password'])
