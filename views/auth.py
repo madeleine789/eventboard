@@ -1,8 +1,8 @@
 __author__ = 'mms'
 
-from flask import current_app, Blueprint, render_template, abort, request, flash, redirect, url_for, session, g
+from flask import current_app, Blueprint, render_template, request, redirect, session
 from app import login_manager, flask_bcrypt
-from flask.ext.login import (current_user, login_required, login_user, logout_user, confirm_login, fresh_login_required)
+from flask.ext.login import (login_required, login_user, logout_user, confirm_login)
 
 from forms import forms
 from libs.user import User
@@ -16,18 +16,14 @@ def login():
 		email = request.form["email"]
 		u = User()
 		user = u.get_by_email_w_password(email)
+
 		if user and flask_bcrypt.check_password_hash(user.password, request.form["password"]) and user.is_active():
 			remember = request.form.get("remember", "no") == "no"
 
 			if login_user(user, remember=remember):
-				# flash("Logged in!")
-				print id
-				#identity_changed.send(current_app._get_current_object(),identity=Identity(user.id))
-
 				return redirect('/events/create')
 			else:
 				pass
-			# flash("unable to log in")
 
 	return render_template("/auth/login.html")
 
@@ -58,9 +54,9 @@ def register():
 				return redirect('/')
 			else:
 				error = "Unable to log in"
-
 		except:
 			error = "Error on registration - possible duplicate emails"
+
 	data = {
 		'form': register_form,
 		'error': error
@@ -74,9 +70,7 @@ def register():
 def reauth():
 	if request.method == "POST":
 		confirm_login()
-		# flash(u"Reauthenticated.")
 		return redirect(request.args.get("next") or '/admin')
-
 	data = {}
 	return render_template("/auth/reauth.html", **data)
 
@@ -87,8 +81,6 @@ def logout():
 	logout_user()
 	for key in ('identity.name', 'identity.auth_type'):
 		session.pop(key, None)
-	#identity_changed.send(current_app._get_current_object(), identity=AnonymousIdentity())
-	# flash("Logged out.")
 	return redirect('/login')
 
 

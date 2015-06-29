@@ -11,8 +11,6 @@ class User(db.Document):
 	isAdmin = db.BooleanField()
 	timestamp = db.DateTimeField(default=datetime.datetime.now())
 
-
-
 class Comment(db.EmbeddedDocument):
 	created_at = db.DateTimeField(default=datetime.datetime.now, required=True)
 	body = db.StringField(max_length=140, required=True)

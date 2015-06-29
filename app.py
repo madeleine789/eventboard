@@ -32,7 +32,7 @@ db = MongoEngine(app)
 app.session_interface = MongoEngineSessionInterface(db)
 
 twitter_oembedder = TwitterOEmbedder()
-cache = Cache(app)
+cache = Cache(app, config={'CACHE_TYPE': 'simple'})
 twitter_oembedder.init(app, cache)
 
 flask_bcrypt = Bcrypt(app)
@@ -41,6 +41,7 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.refresh_view = 'auth_app.login'
 
-
+# app.debug = True
+# toolbar = DebugToolbarExtension(app)
 
 

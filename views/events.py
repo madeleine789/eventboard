@@ -1,3 +1,4 @@
+from app import cache
 from libs.user import User
 
 __author__ = 'mms'
@@ -15,11 +16,12 @@ events_app = Blueprint('events_app', __name__, template_folder='templates')
 @events_app.before_request
 def load_user():
 	if current_user.is_authenticated():
-		g.user = current_user.get_id()  # return username in get_id()
+		g.user = current_user.get_id()
 	else: g.user = None
 
 
 @events_app.route('/')
+@cache.cached(timeout=50)
 def index():
 	data = {
 		'events': models.Event.objects.order_by("-last_updated")
@@ -37,7 +39,6 @@ def admin_entry_create():
 		return render_template('index.html', error="User role: COMMENTER. You are not authorized to post events.", events=models.Event.objects.order_by("-last_updated"))
 
 	if request.method == "POST":
-
 		if request.form.get('starting_at') == '' or request.form.get('ending_at') == '':
 			error = 'Fill in DateTime fields'
 			data = {
@@ -50,7 +51,6 @@ def admin_entry_create():
 		event = models.Event()
 		event.title = request.form.get('title')
 		event.description = request.form.get('content')
-		print request.form.get('starting_at')
 		event.starting_at = datetime.strptime(request.form.get('starting_at'), '%Y-%m-%d %H:%M:%S')
 		event.ending_at = datetime.strptime(request.form.get('ending_at'), '%Y-%m-%d %H:%M:%S')
 
@@ -62,7 +62,6 @@ def admin_entry_create():
 		tweets.post(status=status)
 
 		return redirect('/events/%s' % event.id)
-
 	else:
 		data = {
 			'title': 'Create new event',
@@ -90,38 +89,34 @@ def admin_entry_edit(event_id):
 				return render_template('event/event_edit.html', **data)
 			event.title = request.form.get('title', '')
 			event.description = request.form.get('content')
-			event.starting_at = datetime.strptime(request.form.get('starting_at'), '%Y-%m-%d %H:%M:%S')
-			event.ending_at = datetime.strptime(request.form.get('ending_at'), '%Y-%m-%d %H:%M:%S')
+			if request.form.get('starting_at'):
+				event.starting_at = datetime.strptime(request.form.get('starting_at'), '%Y-%m-%d %H:%M:%S')
+			if request.form.get('ending_at'):
+				event.ending_at = datetime.strptime(request.form.get('ending_at'), '%Y-%m-%d %H:%M:%S')
 
 			event.save()
-
-		# flash('Event has been updated')
-
 		data = {
 			'title': 'Edit event',
 			'event': event
 		}
-
 		return render_template('event/event_edit.html', **data)
-
 	else:
 		return render_template('event/event_edit.html', error="Unable to find entry %s".format(event_id))
 
 
 @events_app.route('/events/<event_id>')
+@cache.cached(timeout=50)
 def entry_page(event_id):
 	event = models.Event.objects().with_id(event_id)
 
 	if event:
-
-		ids = tweets.search(query=event.title)  # tweets.search(query=event.title)
+		ids = tweets.search(query=event.title)
 		data = {
 			'event': event,
 			'author': event.user,
-			'tweet_ids': ids
+			'tweet_ids': ids,
 		}
 		return render_template('event/event_display.html', **data)
-
 	else:
 		return render_template('event/event_display.html', error="Event not found.")
 
@@ -139,7 +134,6 @@ def post_comment(event_id):
 
 			event.comments.append(comment)
 			event.save()
-			# flash('Comment has been added')
 			return redirect('/events/%s' % event.id)
 	else:
 		return render_template('event/event_display.html', error="Event not found.")

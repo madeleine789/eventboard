@@ -14,20 +14,20 @@ class User(UserMixin):
 		self.id = None
 
 	def save(self):
-		newUser = models.User(email=self.email, password=self.password, isAdmin=self.isAdmin, active=self.active)
-		newUser.save()
-		print "new user id = %s " % newUser.id
-		self.id = newUser.id
+		new_user = models.User(email=self.email, password=self.password, isAdmin=self.isAdmin, active=self.active)
+		new_user.save()
+		print "new user id = %s " % new_user.id
+		self.id = new_user.id
 		return self.id
 
 	def get_by_email(self, email):
 
-		dbUser = models.User.objects.get(email=email)
-		if dbUser:
-			self.email = dbUser.email
-			self.active = dbUser.active
-			self.isAdmin = dbUser.isAdmin
-			self.id = dbUser.id
+		db_user = models.User.objects.get(email=email)
+		if db_user:
+			self.email = db_user.email
+			self.active = db_user.active
+			self.isAdmin = db_user.isAdmin
+			self.id = db_user.id
 			return self
 		else:
 			return None
@@ -35,19 +35,18 @@ class User(UserMixin):
 	def get_by_email_w_password(self, email):
 
 		try:
-			dbUser = models.User.objects.get(email=email)
-
-			if dbUser:
-				self.email = dbUser.email
-				self.active = dbUser.active
-				self.password = dbUser.password
-				self.isAdmin = dbUser.isAdmin
-				self.id = dbUser.id
+			db_user = models.User.objects.get(email=email)
+			if db_user:
+				self.email = db_user.email
+				self.active = db_user.active
+				self.password = db_user.password
+				self.isAdmin = db_user.isAdmin
+				self.id = db_user.id
 				return self
 			else:
 				return None
 		except:
-			print "there was an error"
+			# ERROR
 			return None
 
 	def get_mongo_doc(self):
@@ -57,13 +56,12 @@ class User(UserMixin):
 			return None
 
 	def get_by_id(self, id):
-		dbUser = models.User.objects.with_id(id)
-		if dbUser:
-			self.email = dbUser.email
-			self.active = dbUser.active
-			self.isAdmin = dbUser.isAdmin
-			self.id = dbUser.id
-
+		db_user = models.User.objects.with_id(id)
+		if db_user:
+			self.email = db_user.email
+			self.active = db_user.active
+			self.isAdmin = db_user.isAdmin
+			self.id = db_user.id
 			return self
 		else:
 			return None
