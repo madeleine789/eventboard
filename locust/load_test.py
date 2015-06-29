@@ -1,50 +1,49 @@
 __author__ = 'mms'
 
 from locust import HttpLocust, TaskSet, task
+from random import randint, SystemRandom
+from string import digits, ascii_uppercase
+import random
+def login(slf):
+    slf.client.post("/login", data={'email': 'ledge@mail.com', 'password': '123'})
+
+def post_comment(slf):
+    body = ''.join(SystemRandom().choice(ascii_uppercase + digits) for _ in range(12))
+    slf.client.post("/events/558eb817f18b3023b4c54167", data={'body': body})
 
 
-class CommenterBehavior(TaskSet):
-    def on_start(self):
-        self.client.post("/login", data={'email': 'commenter@mail.com', 'password': '123'})
+def edit_event(slf):
+    content = ''.join(SystemRandom().choice(ascii_uppercase + digits) for _ in range(128))
+    slf.client.post("/events/558eb817f18b3023b4c54167/edit",
+                    data={'content': content})
 
-    @task
-    def post_comment(self):
-        self.client.post("/events/558ecb0df18b30233cafa6cd", data={'body': 'This is a comment, fascinating af.'})
-        self.interrupt()
 
-class CreatorBehavior(TaskSet):
-    def on_start(self):
-        self.client.post("/login", data={'email': 'creator@mail.com', 'password': '123'})
+def post_event(slf):
+    title = ''.join(SystemRandom().choice(ascii_uppercase + digits) for _ in range(20))
+    content = ''.join(SystemRandom().choice(ascii_uppercase + digits) for _ in range(128))
+    slf.client.post("/events/create", data={'title': title, 'content': content,
+                                            'starting_at': '2015-07-01 11:00:00', 'ending_at': '2015-07-01 20:00:00'})
 
-    @task
-    def edit_event(self):
-        self.client.post("/events/558ecb0df18b30233cafa6cd/edit", data={'content': 'This is new fascinating description #event'})
-        self.interrupt()
 
-    @task
-    def post_event(self):
-        self.client.post("/events/create", data={'title':'This is a title.','content':'describing event....', 'starting_at':'2015-07-01 11:00:00', 'ending_at':'2015-07-01 20:00:00'})
-        self.interrupt()
+def index(slf):
+    slf.client.get("/")
 
+
+def get_login(slf):
+    slf.client.get("/login")
+
+
+def get_register(slf):
+    slf.client.get("/register")
+
+def get_event(slf):
+    slf.client.get("/events/558eb817f18b3023b4c54167")
 
 class UserBehavior(TaskSet):
-    tasks = {CreatorBehavior:5} # , CommenterBehavior:5}
+    tasks = {index:2, get_login:2, get_register:2, get_event:2, post_event:1, post_comment:1}
 
-    @task
-    def index(self):
-        self.client.get("/")
-
-    @task
-    def login(self):
-        self.client.get("/login")
-
-    @task
-    def register(self):
-        self.client.get("/register")
-
-    @task
-    def get_event(self):
-        self.client.get("/events/558ecb0df18b30233cafa6cd")
+    def on_start(self):
+        login(self)
 
 
 class WebsiteUser(HttpLocust):

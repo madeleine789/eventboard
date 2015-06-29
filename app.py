@@ -41,7 +41,7 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.refresh_view = 'auth_app.login'
 
-# app.debug = True
-# toolbar = DebugToolbarExtension(app)
+app.debug = True
+
 
 
