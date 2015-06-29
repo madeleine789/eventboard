@@ -1117,7 +1117,7 @@
 
             // TODO: We need to take the current isoWeekYear, but that depends on
             // how we interpret now (local, utc, fixed offset). So create
-            // a now version of current config (take local/utc/offset flags, and
+            // a now version of current config.sh (take local/utc/offset flags, and
             // create now).
             weekYear = defaults(w.GG, config._a[YEAR], weekOfYear(local__createLocal(), 1, 4).year);
             week = defaults(w.W, 1);

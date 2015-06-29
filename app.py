@@ -18,6 +18,8 @@ app.config['MONGODB_SETTINGS'] = {
 	'host':'mongodb://user:eventboard@ds029317.mongolab.com:29317/eventboard'
 }
 
+app.config['THREADS_PER_PAGE'] = 4
+app.config['CSRF_ENABLED'] = True
 app.config['SECRET_KEY'] = 'you-will-never-know'
 
 app.config['TWITTER_CONSUMER_KEY'] = 'IRh7xn4AZfryNrsXQI3hXNIPu'
