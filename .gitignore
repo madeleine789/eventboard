@@ -4,4 +4,5 @@ flask/
 build/
 dist/
 eventboard.egg-info/
+locust/
 .idea/

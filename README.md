@@ -11,7 +11,6 @@
 
 ### TO DO
 * tests
-* deployment on pythonanywhere.com
 
 ### Configure environment
 
