@@ -8,3 +8,4 @@ flask-wtf==0.11
 flask-twitter-oembedder==0.1.8
 twittersearch==1.0.1
 tweepy==3.3.0
+locustio=0.7.3
